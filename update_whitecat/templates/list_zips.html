@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Current Zips</title>
+</head>
+<body>
+<form name="list_zips" method="post" action="update_zip">
+    <!-- <input type="text" name="zips" value="zips"/>context -->
+    <h2>选择私有云项目</h2>
+    <select name="selected_pro" size="1">
+        {% for pro_name in pro_list %}
+        <option value="{{ pro_name }}">{{ pro_name }}</option>
+        {% endfor %}
+    </select>
+    <!-- <input type="checkbox" name="selected_pro" value="{{ pro_name }}"/>{{ pro_name }} -->
+    <hr size="3" color="blue"/>
+    <h2>选择更新的zip包</h2>
+    <select name="selected_zip">
+        {% for zip_item in zip_items %}
+        <option value="{{ zip_item }}">{{ zip_item }}</option>
+        {% endfor %}
+    </select>
+    <!--<input type="checkbox" name="selected_zip" value="{{ zip_item }}"/>{{ zip_item }} -->
+    <hr size="3" color="blue"/>
+    <input type="submit" value="提交"/>
+    <input type="reset" value="取消">
+</form>
+</body>
+</html>
