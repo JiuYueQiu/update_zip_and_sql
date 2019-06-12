@@ -5,8 +5,9 @@
     <title>Current Zips</title>
 </head>
 <body>
-<form name="list_zips" method="post" action="update_zip">
+<form name="list_zips" method="post" action="update_zip_result">
     <!-- <input type="text" name="zips" value="zips"/>context -->
+    {% csrf_token %}
     <h2>选择私有云项目</h2>
     <select name="selected_pro" size="1">
         {% for pro_name in pro_list %}
