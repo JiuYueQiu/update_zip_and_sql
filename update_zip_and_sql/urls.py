@@ -20,4 +20,5 @@ from update_whitecat import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('show_zips/', views.show_zips),
+    path('show_zips/update_zip_result', views.update_zip),
 ]
