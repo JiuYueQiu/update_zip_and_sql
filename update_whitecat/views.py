@@ -11,8 +11,18 @@ zips_path = 'F:\\iworker工作文件\\日常更新zips'
 remote_dir = '/data/website/iworker2/'
 
 
-def tar_zips():
-    pass
+def ssh_exec(host, port, user, password, command):
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+    try:
+        client.connect(host, port, user, password)
+        stdin, stdout, stderr = client.exec_command(command)
+        print(stderr.readlines(), stdout.readlines())
+        return stdin, stdout, stderr
+    except Exception as err:
+        return err
+    finally:
+        client.close()
 
 
 def upload_zip(host, user, password, port, zip_file):
@@ -59,15 +69,25 @@ def update_zip(request):
     selected_pro, selected_zip = request.POST.get('selected_pro'), request.POST.get('selected_zip')
     pro_name_id = Program.objects.get(pro_name=selected_pro).id
     _, _, _, title, choice, ip, port, user, password = Server.objects.get(pro_name_id=pro_name_id).__dict__.values()
-    print(ip, user, password, port, selected_zip)
-    upload_zip(ip, user, password, port, selected_zip)
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
-    client.connect(hostname=ip, port=port, username=user, password=password)
-    stdin, stdout, stderr = client.exec_command('cd %s ; unzip -o %s' % (remote_dir, selected_zip))
-    context = {
-        'stderr': stderr.readlines(),
-        'stdout': stdout.readlines(),
-    }
-    client.close()
-    return render(request, 'update_zip_result.html', context)
+    print('tar_zips: %s' % request.POST.get('tar_zips'))
+    if request.POST.get('tar_zips') == '1':
+        tar_command = "cd /data/website/iworker2 ; tar -cf $(date %F_%T)_st.tar.gz system themes"
+        stdin, stdout, stderr = ssh_exec(ip, port, user, password, tar_command)
+        if stderr:
+            print('tar err: %s' % stderr)
+            context = {
+                'tar_result': stderr
+            }
+            return render(request, 'list_zips.html', context)
+        else:
+            return render(request, 'list_zips.html', {'tar_result': 'success'})
+    else:
+        upload_zip(ip, user, password, port, selected_zip)
+        unzip_command = "cd %s ; unzip -o %s" % (remote_dir, selected_zip)
+        stdin, stdout, stderr = ssh_exec(ip, port, user, password, unzip_command)
+        context = {
+            'stderr': stderr.readlines(),
+            'stdout': stdout.readlines(),
+        }
+        print(stderr.readlines(), stdout.readlines())
+        return render(request, 'update_zip_result.html', context)

@@ -24,3 +24,6 @@ class Server(models.Model):
     port = models.CharField(max_length=10, default=22, null=False)
     user = models.CharField(max_length=30, default='root', null=False)
     password = models.CharField(max_length=50, null=False)
+
+    def __str__(self):
+        return self.title
