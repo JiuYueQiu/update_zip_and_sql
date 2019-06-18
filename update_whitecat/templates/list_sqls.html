@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Current Sqls</title>
+</head>
+<body>
+<form name="list_sqls" method="post">
+    <!-- <input type="text" name="zips" value="zips"/>context -->
+    {% csrf_token %}
+    <h2>选择私有云项目</h2>
+    <select name="selected_pro" size="1">
+        {% for pro_name in pro_list %}
+        <option value="{{ pro_name }}">{{ pro_name }}</option>
+        {% endfor %}
+    </select>
+    <!-- <input type="checkbox" name="selected_pro" value="{{ pro_name }}"/>{{ pro_name }} -->
+    <hr size="3" color="blue"/>
+    <h2>选择更新的sql文件</h2>
+    <select name="selected_sql">
+        {% for sql_item in sql_items %}
+        <option value="{{ sql_item }}">{{ sql_item }}</option>
+        {% endfor %}
+    </select>
+    <hr size="3" color="blue"/>
+    <input type="submit" value="提交"/>
+    <input type="reset" value="取消">
+</form>
+</body>
+</html>

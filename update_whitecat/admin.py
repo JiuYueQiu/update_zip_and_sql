@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Program, Server
+from .models import Program, Server, SqlServer
 # Register your models here.
 
 
@@ -11,5 +11,12 @@ class ProgramAdmin(admin.ModelAdmin):
 
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
-    fields = ['pro_name', 'title', 'choice', 'ip', 'user', 'password', 'port']
-    list_display = ['pro_name', 'title', 'choice']
+    fields = ['pro_name', 'ip', 'user', 'password', 'port']
+    list_display = ['pro_name', 'ip', 'user', 'password', 'port']
+
+
+@admin.register(SqlServer)
+class SqlServerAdmin(admin.ModelAdmin):
+    fields = ['pro_name', 'ip', 'user', 'password', 'port', 'mysql_user', 'mysql_password']
+    list_display = ['pro_name', 'ip', 'user', 'password', 'port', 'mysql_user', 'mysql_password']
+
