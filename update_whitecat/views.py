@@ -121,11 +121,14 @@ def update_sql(request):
         __dict__.values()
     file_path = 'F:\\iworker工作文件\\日常更新sqls'
     remote_path = '/tmp/'
+    print(selected_pro, selected_sql)
     upload_file(ip, user, password, port, selected_sql, file_path, remote_path)
-    update_sql_command = "mysql -u%s -p%s < /tmp/%s" % (mysql_user, mysql_password, selected_sql)
+    update_sql_command = "source /etc/profile; mysql -u%s -p%s < /tmp/%s" % (mysql_user, mysql_password, selected_sql)
     client = ssh_exec(ip, port, user, password)
     stdin, stdout, stderr = client.exec_command(update_sql_command)
-    if stderr.readlines():
+    # print(stdout.readlines(), stderr.readlines())
+    err = stderr.readlines()[0]
+    if not err.startswith('Warning'):
         return HttpResponse(stderr.readlines())
     else:
-        return HttpResponse('update %s success \n%s' % (selected_sql, stdout.readlines()))
+        return HttpResponse("update %s success \n%s \n%s" % (selected_sql, stdout.readlines(), err))
