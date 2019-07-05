@@ -37,7 +37,7 @@ def upload_file(host, user, password, port, file, file_path, remote_path):
 def show_zips(request):
     zip_items = []
     pro_list = []
-    db = MySQLdb.connect('192.168.1.111', 'root', 'root', 'django_admin')
+    db = MySQLdb.connect('192.168.1.111', 'root', 'root', 'django_admin', charset='utf8')
     cursor = db.cursor()
     cursor.execute("select pro_name from update_whitecat_program;")
     for item in cursor.fetchall():
